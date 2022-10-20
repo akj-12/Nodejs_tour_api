@@ -4,13 +4,13 @@ const {
   createTour,
   getTour,
   updatetour,
-  deletetour,
-  checkId
+  deletetour
 } = require('../controllers/tourController');
+
 const router = express.Router();
 
 // params middleware
-router.param('id', checkId);
+// router.param('id', checkId);
 
 router
   .route('/')

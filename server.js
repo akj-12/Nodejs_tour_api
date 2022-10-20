@@ -21,37 +21,6 @@ mongoose
   })
   .then(() => console.log(`DATABASE Connected successfully  `));
 
-// schema define
-const tourSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    unique: true,
-    required: [true, 'A tour must have name']
-  },
-  price: {
-    type: Number,
-    required: [true, 'A tour must have price']
-  },
-  rating: {
-    type: Number,
-    default: 4.5
-  }
-});
-
-// schema -> model
-const Tour = mongoose.model('Tour', tourSchema);
-
-// model -> document
-const newTour = new Tour({
-  name: 'The river camper',
-  price: 900
-  // rating: 4.9
-});
-newTour
-  .save()
-  .then(doc => console.log(doc))
-  .catch(err => console.log(`ERROR ${err}`));
-
 /**
  * server
  */
