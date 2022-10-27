@@ -69,7 +69,7 @@ exports.updatetour = async (req, res) => {
       new: true,
       runValidators: true
     }); //Tour.findOne({_id : req.param.id})
-    res.status(200).json({
+    res.status(204).json({
       status: 'success',
       totalTours: tour.length,
       data: {
@@ -89,7 +89,7 @@ exports.updatetour = async (req, res) => {
 exports.deletetour = async (req, res) => {
   try {
     await Tour.findByIdAndDelete(req.params.id);
-    res.status(200).json({
+    res.status(204).json({
       status: 'success',
       data: null
     });
