@@ -5,7 +5,26 @@ const Tour = require('../models/tourModel');
  */
 exports.getAllTours = async (req, res) => {
   try {
-    const tours = await Tour.find();
+    // 1. BUILD QUERY
+    const queryObj = { ...req.query };
+    const excludeFields = ['page', 'sort', 'limit', 'fields'];
+    excludeFields.forEach(el => delete queryObj[el]);
+
+    /**
+     * { difficulty: 'easy', duration: { 'gte': '5' } }
+     * { difficulty: 'easy', duration: { '$gte': '5' } }
+     */
+    let queryStringify = JSON.stringify(queryObj);
+    queryStringify = queryStringify.replace(
+      /\b(gte|gt|lte|lt)\b/g,
+      match => `$${match}`
+    );
+    queryStringify = JSON.parse(queryStringify);
+
+    // 2. EXECUTE QUERY
+    const tours = await Tour.find(queryStringify);
+
+    // 3. SEND RESPONSE
     res.status(200).json({
       status: 'success',
       totalTours: tours.length,
