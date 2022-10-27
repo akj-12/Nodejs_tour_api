@@ -4,13 +4,17 @@ const {
   createTour,
   getTour,
   updatetour,
-  deletetour
+  deletetour,
+  topCheapTourAlias
 } = require('../controllers/tourController');
 
 const router = express.Router();
 
 // params middleware
 // router.param('id', checkId);
+
+// alias route
+router.route('/top-cheap-tours').get(topCheapTourAlias, getAllTours);
 
 router
   .route('/')
