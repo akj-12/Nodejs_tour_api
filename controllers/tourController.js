@@ -21,8 +21,26 @@ exports.getAllTours = async (req, res) => {
     );
     queryStringify = JSON.parse(queryStringify);
 
+    let query = Tour.find(queryStringify);
+
+    // SORTING
+    if (req.query.sort) {
+      const sortBy = req.query.sort.split(',').join(' ');
+      query = query.sort(sortBy);
+    } else {
+      query = query.sort('-createdAt');
+    }
+
+    // LIMITING
+    if (req.query.fields) {
+      const fields = req.query.fields.split(',').join(' ');
+      query = query.select(fields);
+    } else {
+      query = query.select('-__v');
+    }
+
     // 2. EXECUTE QUERY
-    const tours = await Tour.find(queryStringify);
+    const tours = await query;
 
     // 3. SEND RESPONSE
     res.status(200).json({
