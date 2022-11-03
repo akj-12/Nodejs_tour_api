@@ -8,7 +8,10 @@ const tourSchema = new mongoose.Schema(
       type: String,
       unique: true,
       required: [true, 'A tour must have name'],
-      trim: true
+      trim: true,
+      // only for strings
+      maxlength: [40, 'A tour must have less or equal to 40 chars'],
+      minlength: [5, 'A tour must have less or equal to 40 chars']
     },
     duration: {
       type: Number,
@@ -20,11 +23,19 @@ const tourSchema = new mongoose.Schema(
     },
     difficulty: {
       type: String,
-      required: [true, 'A tour must have a difficulty']
+      required: [true, 'A tour must have a difficulty'],
+      // only for strings
+      enums: {
+        values: ['easy', 'medium', 'difficult'],
+        message: 'Value of difficulty must be easy, medium, difficult'
+      }
     },
     ratingsAverage: {
       type: Number,
-      default: 4.5
+      default: 4.5,
+      // only for strings as well as number
+      min: [1, 'Rating must be above 1.0'],
+      max: [5, 'Rating must be below or equal to 5.0']
     },
     ratingsQuantity: {
       type: Number,
@@ -34,7 +45,17 @@ const tourSchema = new mongoose.Schema(
       type: Number,
       required: [true, 'A tour must have price']
     },
-    priceDiscount: Number,
+    priceDiscount: {
+      type: Number,
+      // custom validator
+      validate: {
+        validator: function(val) {
+          // this only points to current doc on new document creation (not on update)
+          return val < this.price;
+        },
+        message: 'Discount price ({VALUE}) should be low than regular price'
+      }
+    },
     rating: {
       type: Number,
       default: 4.5
@@ -76,13 +97,13 @@ tourSchema.virtual('durationWeeks').get(function() {
 /**
  * DOCUMENT MIDDLEWARE
  */
-// this middleware will call before save document in DB
+// this middleware will call before save document in DB not on update
 tourSchema.pre('save', function(next) {
   this.slug = slugify(this.name, { lower: true });
   next();
 });
 
-// this middleware will call after save document in DB
+// this middleware will call after save document in DB not on update
 tourSchema.post('save', function(doc, next) {
   console.log('Document Created !');
   next();
