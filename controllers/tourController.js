@@ -1,6 +1,7 @@
 const Tour = require('../models/tourModel');
 const APIFeatures = require('../utils/apiFeatures');
 const asyncHandler = require('../utils/asyncHandler');
+const ErrorHandler = require('../utils/errorHandler');
 
 /**
  * Handler
@@ -45,6 +46,10 @@ exports.createTour = asyncHandler(async (req, res, next) => {
 
 exports.getTour = asyncHandler(async (req, res, next) => {
   const tour = await Tour.findById(req.params.id); //Tour.findOne({_id : req.param.id})
+
+  if (!tour) {
+    return next(new ErrorHandler('Tour not found with given ID', 404));
+  }
   res.status(200).json({
     status: 'success',
     totalTours: tour.length,
@@ -59,6 +64,10 @@ exports.updatetour = asyncHandler(async (req, res, next) => {
     new: true,
     runValidators: true
   }); //Tour.findOne({_id : req.param.id})
+
+  if (!tour) {
+    return next(new ErrorHandler('Tour not found with given ID', 404));
+  }
   res.status(204).json({
     status: 'success',
     totalTours: tour.length,
@@ -69,7 +78,12 @@ exports.updatetour = asyncHandler(async (req, res, next) => {
 });
 
 exports.deletetour = asyncHandler(async (req, res, next) => {
-  await Tour.findByIdAndDelete(req.params.id);
+  const tour = await Tour.findByIdAndDelete(req.params.id);
+
+  if (!tour) {
+    return next(new ErrorHandler('Tour not found with given ID', 404));
+  }
+
   res.status(204).json({
     status: 'success',
     data: null
