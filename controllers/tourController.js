@@ -13,6 +13,7 @@ exports.topCheapTourAlias = async (req, res, next) => {
   next();
 };
 
+// 1. Build query
 exports.getAllTours = asyncHandler(async (req, res, next) => {
   const features = new APIFeatures(Tour.find(), req.query)
     .filter()

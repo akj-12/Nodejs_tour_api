@@ -15,7 +15,8 @@ const router = express.Router();
 // params middleware
 // router.param('id', checkId);
 
-// alias route
+// alias route(where we can use defined controller and manipualte using middleware)
+// here topCheapTourAlias is middleware and getAllTours handler (controller)
 router.route('/top-cheap-tours').get(topCheapTourAlias, getAllTours);
 
 // tour stats
@@ -26,6 +27,7 @@ router
   .route('/')
   .get(getAllTours)
   .post(createTour);
+
 router
   .route('/:id')
   .get(getTour)

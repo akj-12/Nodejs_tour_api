@@ -19,7 +19,8 @@ mongoose
     useUnifiedTopology: true,
     useFindAndModify: false
   })
-  .then(() => console.log(`DATABASE Connected successfully  `));
+  .then(() => console.log(`DATABASE Connected successfully  `))
+  .catch(e => console.log(e));
 
 /**
  * server
